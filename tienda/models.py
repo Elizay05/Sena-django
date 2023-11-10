@@ -1,0 +1,36 @@
+from django.db import models
+
+# Create your models here.
+class Categoria(models.Model):
+    nombre = models.CharField(max_length=254)
+    descripcion = models.TextField()
+
+    def __str__(self):
+        return self.nombre
+
+
+class Productos(models.Model):
+    nombre = models.CharField(max_length=200, unique=True)
+    precio = models.IntegerField()
+    inventario = models.IntegerField()
+    fecha_creacion = models.DateField()
+    categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING)
+
+    def __str__(self):
+        return self.nombre
+
+
+class Usuario(models.Model):
+	nombre = models.CharField(max_length=254)
+	correo = models.EmailField(max_length=254)
+	clave = models.CharField(max_length=254)
+	ROLES = (
+		(1, "Administrador"),
+		(2, "Despachador"),
+		(3, "Cliente"),
+	)
+	rol = models.IntegerField(choices=ROLES, default=3)
+	foto = models.ImageField(upload_to="fotos/")
+
+	def __str__(self):
+		return self.nombre

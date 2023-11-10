@@ -1,0 +1,23 @@
+{% extends 'tienda/base.html' %}
+{% load static %}
+
+{% block titulo %}Crear Categorias{% endblock %}
+
+{% block contenedor %}
+    <div class="container">
+        <form action="{% url 'categorias_actualizar' %}" method="post">
+            {% csrf_token %}
+            <h1>Registrar Categorías</h1>
+            <input type="hidden" name="id" value="{{ data.id }}">
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="exampleFormControlInput1" name="nombre" value="{{ data.nombre }}">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Descripción</label>
+                <input type="text" class="form-control" id="exampleFormControlInput2" name="descripcion" value="{{ data.descripcion }}"></textarea>
+            </div>
+            <button class="btn btn-success">Actualizar</button>
+        </form>
+    </div>
+{% endblock %}

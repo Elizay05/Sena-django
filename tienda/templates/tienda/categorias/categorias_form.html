@@ -1,0 +1,22 @@
+{% extends 'tienda/base.html' %}
+{% load static %}
+
+{% block titulo %}Crear Categorias{% endblock %}
+
+{% block contenedor %}
+    <div class="container">
+        <form action="{% url 'categorias_crear' %}" method="post">
+            {% csrf_token %}
+            <h1>Registrar Categorías</h1>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="exampleFormControlInput1" name="nombre">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Descripción</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="descripcion"></textarea>
+            </div>
+            <button class="btn btn-success">Registrar</button>
+        </form>
+    </div>
+{% endblock %}
