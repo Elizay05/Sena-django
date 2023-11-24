@@ -5,13 +5,56 @@ from django.contrib import messages
 #Importamos todos los modelos 
 from .models import *
 
+#Importamos el archivo de decoradoes
+from .decorador_especial import *
+
 # Create your views here.
 
 def index(request):
-    return render(request, 'tienda/login/login.html')
+    logueo = request.session.get("logueo", False)
+    if logueo == False:
+        return render(request, "tienda/login/login.html")
+    else:
+        return redirect("inicio")
+
+
+def login(request):
+    if request.method == "POST":
+        user = request.POST.get("correo")
+        passw= request.POST.get("clave")
+        #select * from Usuario where correo = "user" and clave = "passw"
+        try:
+            q = Usuario.objects.get(correo = user, clave = passw)
+            #Crear Variable de sesión
+            request.session["logueo"] = {
+                "id": q.id,
+                "nombre": q.nombre,
+                "rol": q.rol
+            }
+            messages.success(request, f"Bienvenido {q.nombre}!!")
+            return redirect ("inicio")
+        except Exception as e:
+            messages.error(request, f"Error: Usuario o contraseña incorrectos...")
+            return redirect ("index")
+    else:
+        messages.warning(request, 'Error: No se enviaron datos...')
+        return redirect("index")
+    
+def logout (request):
+    try:
+        del request.session["logueo"]
+        messages.success(request, "Sesión cerrada correctamente!")
+        return redirect("index")
+    except Exception as e:
+        messages.warning(request, "No se pudo cerrar sesión...")
+        return redirect("inicio")
 
 def inicio(request):
-    return render(request, "tienda/inicio.html")
+    logueo = request.session.get("logueo", False)
+    if logueo:
+        return render(request, "tienda/inicio.html")
+    else:
+        return redirect("index")
 
 def saludar(request):
     return HttpResponse("Hola, <strong style='color:red'>A todos!!</strong>")
@@ -54,14 +97,20 @@ def calc(request):
     else:
         return HttpResponse("Operador no valido")
     
-
+@login_requerido
 def categorias(request):
     #select * from categorias
+    logueo = request.session.get("logueo", False)
+    #Autencticación y autorización
+    if logueo and logueo["rol"] == 1:
+        q = Categoria.objects.all()
+        print(q)
+        contexto = {"data": q}
+        return render(request,"tienda/categorias/categorias.html", contexto)
+    else:
+        messages.info(request, "No está autorizado.")
+        return redirect("index")
 
-    q = Categoria.objects.all()
-    print(q)
-    contexto = {"data": q}
-    return render(request,"tienda/categorias/categorias.html", contexto)
 
 def categorias_form(request):
     return render(request, 'tienda/categorias/categorias_form.html')
@@ -120,6 +169,3 @@ def categorias_actualizar(request):
         
     return redirect('categorias_listar')
 
-
-def login(request):
-    return render(request, "tienda/login/login.html")

@@ -4,8 +4,9 @@
 {% block titulo %}Iniciar Sesión{% endblock %}
 
 {% block contenedor %}
-        <div class="form-box">
-            <form action="#" method="post" class="form">
+    <div class="contenedor">
+        <div class="form-box ">
+            <form action="{% url 'login' %}" method="post" class="form">
                 {% csrf_token %}
                 <span class="title">Iniciar Sesión</span>
                 <span class="subtitle">Ingresa con tu email y contraseña.</span>
@@ -13,10 +14,11 @@
                     <input type="email" class="input" placeholder="Email" name="correo">
                     <input type="password" class="input" placeholder="Password" name="clave">
                 </div>
-                <button class="btn btn-primary">Ingresar</button>
+                <button type="submit" class="btn btn-primary">Ingresar</button>
             </form>
             <div class="form-section">
             <p>No tienes una cuenta?<a href=""> Registrarse</a> </p>
             </div>
         </div>
+    </div>
 {% endblock %}

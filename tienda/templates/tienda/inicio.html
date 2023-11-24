@@ -5,7 +5,12 @@
 
 {% block contenedor %}
     <h1 style="color: red;">Inicio</h1>
-    <img src="{% static 'tienda/img/tienda.jpg' %}" alt="desierto"  width="800px" height="500px">
-    <br/>
+    <p>Datos de la sesión: 
+        <br>
+        ID: {{ request.session.logueo.id }}<br>
+        Nombre: {{ request.session.logueo.nombre }}<br>
+        Rol: {{ request.session.logueo.rol }}<br>
+        <a class="btn btn-outline-success" href="{% url 'logout' %}">Cerrar Sesión</a>
+    </p>
 {% endblock %}
     

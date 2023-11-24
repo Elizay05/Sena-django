@@ -4,6 +4,11 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('inicio/', views.inicio, name='inicio'),
+    
+    #Autenticación de usuarios del sistema.
+    path('login/', views.login, name='login'),
+    path('logout/', views.logout, name='logout'),
+    
 
     path('formulario_calc/', views.formulario_calc,name='formulario_calc'),
 

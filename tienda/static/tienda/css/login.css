@@ -1,3 +1,9 @@
+.contenedor{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
 .form-box {
     max-width: 30%;
     margin-top: 5%;

@@ -22,7 +22,7 @@ class Productos(models.Model):
 
 class Usuario(models.Model):
 	nombre = models.CharField(max_length=254)
-	correo = models.EmailField(max_length=254)
+	correo = models.EmailField(max_length=254, unique=True)
 	clave = models.CharField(max_length=254)
 	ROLES = (
 		(1, "Administrador"),
