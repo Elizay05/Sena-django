@@ -29,7 +29,8 @@ def login(request):
             request.session["logueo"] = {
                 "id": q.id,
                 "nombre": q.nombre,
-                "rol": q.rol
+                "rol": q.rol,
+                "nombre_rol": q.get_rol_display()
             }
             messages.success(request, f"Bienvenido {q.nombre}!!")
             return redirect ("inicio")
@@ -52,9 +53,51 @@ def logout (request):
 def inicio(request):
     logueo = request.session.get("logueo", False)
     if logueo:
-        return render(request, "tienda/inicio.html")
+        categorias = Categoria.objects.all()
+        
+        cat = request.GET.get("cat")
+        if cat == None:
+            productos = Productos.objects.all()
+        else:
+            c = Categoria.objects.get(pk=cat)
+            productos = Productos.objects.filter(categoria=c)
+        contexto = {"data": productos, "cat":categorias}
+        return render(request, "tienda/inicio.html", contexto)
     else:
         return redirect("index")
+
+
+def perfil(request):
+    logueo = request.session.get("logueo", False)
+    # Consultamos en DB por el ID del usuario logueado...
+    q = Usuario.objects.get(pk=logueo["id"])
+    contexto = {"data": q}
+    return render(request, "tienda/login/perfil.html", contexto)
+
+def cambiar_contrasena_form(request):
+    return render(request, "tienda/login/cambio_contrasena.html")
+
+def cambiar_clave(request):
+    if request.method == "POST":
+        logueo = request.session.get("logueo", False)
+        q = Usuario.objects.get(pk=logueo["id"])
+        c1 = request.POST.get("nueva1")
+        c2 = request.POST.get("nueva2")
+        if q.clave == request.POST.get("clave"):
+            if c1 == c2:
+                #Cambiar clave en DB
+                q.clave = c1
+                q.save()
+                messages.success(request, "Contraseña guardada correctamente!")
+            else:
+                messages.info(request, "Las contraseñas nuevas no coinciden...")
+        else:
+            messages.error(request, "Contraseña no válida...")
+    else:
+        messages.warning(request, "Error: No se enviaron datos...")
+    
+    return redirect('cambiar_contrasena_form')
+
 
 def saludar(request):
     return HttpResponse("Hola, <strong style='color:red'>A todos!!</strong>")

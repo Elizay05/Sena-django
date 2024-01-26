@@ -10,10 +10,12 @@ class CategoriaAdmin(admin.ModelAdmin):
 
 @admin.register(Productos)
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ['id','nombre', 'precio', 'inventario', 'fecha_creacion', 'categoria']
+    list_display = ['id','nombre', 'precio', 'inventario', 'fecha_creacion', 'categoria', 'ver_foto']
     search_fields = ['nombre']
     list_filter = ['categoria', 'fecha_creacion']
     list_editable = ['precio']
+    def ver_foto(self, obj):
+        return mark_safe(f"<a href='{obj.foto.url}'><img src='{obj.foto.url}' width='20%'></a>")
 
 @admin.register(Usuario)
 class UsuarioAdmin(admin.ModelAdmin):

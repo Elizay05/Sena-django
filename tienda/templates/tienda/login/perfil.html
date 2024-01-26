@@ -1,0 +1,28 @@
+{% extends 'tienda/base.html' %}
+{% load static %}
+
+{% block titulo %}Perfil{% endblock %}
+
+{% block contenedor %}
+    <h1 style="color: red; text-align: center; margin-top: 1%;" >PERFIL</h1>
+    <div class="card mb-3 mt-5 w-100 h-100 ml-0 mr-0 mx-auto " style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="{{ data.foto.url }}" class="img-fluid rounded-start" alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title"> <strong>{{ data.nombre }}</strong></h5>
+              <p class="card-text">
+                <strong>Correo:</strong> {{ data.correo }}
+                <br>
+                <strong>Rol:</strong> {{ data.get_rol_display }}
+              </p>
+              <p class="card-text"><small class="text-body-secondary">
+                Id de Usuario: {{ data.id }}
+            </small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

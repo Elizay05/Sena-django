@@ -4,13 +4,49 @@
 {% block titulo %}Inicio{% endblock %}
 
 {% block contenedor %}
-    <h1 style="color: red;">Inicio</h1>
-    <p>Datos de la sesión: 
-        <br>
-        ID: {{ request.session.logueo.id }}<br>
-        Nombre: {{ request.session.logueo.nombre }}<br>
-        Rol: {{ request.session.logueo.rol }}<br>
-        <a class="btn btn-outline-success" href="{% url 'logout' %}">Cerrar Sesión</a>
-    </p>
+    <h1 style="color: red; text-align: center; margin-top: 1%;">Tienda Sena</h1>
+    <div class="mb-3 mt-5 w-100 h-100 ml-0 mr-2 mx-auto d-flex" style="max-width: 100%;">
+        <div class="mb-3 mt-5 w-100 h-100 ml-0 mr-2 mx-auto" style="max-width: 30%;">
+            <p class="text-center">Filtrar por Categorias</p>
+            <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                {% for c in cat %}
+                <a href="{% url 'inicio' %}?cat={{ c.id }}" type="button" class="btn btn-outline-primary">{{ c.nombre }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="mb-3 mt-5 w-100 h-100 ml-0 mr-2 mx-auto d-flex justify-content-start flex-wrap" style="max-width: 70%;">
+            {% for r in data%}
+            {% if forloop.first %}
+                <div class="row row-cols-1" style="clear:left;" >
+            {% endif %}
+    
+            {% if forloop.counter0|divisibleby:4 %}
+            <!-- Paginar-->
+                </div>
+                <div class="row row-cols-1" style="clear:left;" >
+            {% endif %}
+            
+            <div class="card mb-4 mr-2 m-3" style="width: 18rem;">
+                <img src="{{ r.foto.url }}" class="card-img-top" alt="..." height="250px">
+                <div class="card-body">
+                  <h5 class="card-title text-center"> <strong> {{ r.nombre }} </strong></h5>
+                  <h6 style="margin-bottom: 0%;" class="card-text text-center"><strong>({{ r.precio }})</strong></h6>
+                  <p class="card-text">{{ r.categoria }}</p>
+                  <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="number">
+                    <button class="btn btn-outline-success" type="submit">Añadir</button>
+                  </form>
+                </div>
+            </div> 
+    
+            {% if forloop.last %}
+                </div>
+            {% endif %}
+        {% endfor %}
+        </div>
+    
+    
+    </div>
+    
 {% endblock %}
     

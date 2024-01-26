@@ -8,7 +8,13 @@ urlpatterns = [
     #Autenticación de usuarios del sistema.
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
-    
+
+    #Perfil
+    path('perfil/', views.perfil, name='perfil'),
+
+    #Cambiar contraseña
+    path('cambiar_contrasena_form/', views.cambiar_contrasena_form, name='cambiar_contrasena_form'),
+    path('cambiar_clave/', views.cambiar_clave, name='cambiar_clave'),
 
     path('formulario_calc/', views.formulario_calc,name='formulario_calc'),
 

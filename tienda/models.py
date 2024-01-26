@@ -10,14 +10,14 @@ class Categoria(models.Model):
 
 
 class Productos(models.Model):
-    nombre = models.CharField(max_length=200, unique=True)
-    precio = models.IntegerField()
-    inventario = models.IntegerField()
-    fecha_creacion = models.DateField()
-    categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING)
-
-    def __str__(self):
-        return self.nombre
+	nombre = models.CharField(max_length=254, unique=True)
+	precio = models.IntegerField()
+	inventario = models.IntegerField()
+	fecha_creacion = models.DateField()
+	categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING)
+	foto = models.ImageField(upload_to="fotos_productos/", default="fotos_productos/default.png")
+	def __str__(self):
+		return self.nombre
 
 
 class Usuario(models.Model):
