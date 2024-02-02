@@ -26,6 +26,10 @@ urlpatterns = [
 
     path('calculadora/<int:num1>/<int:num2>/<str:operador>', views.calculadora, name='calculadora'), 
 
+    #Carrito de compra
+    path("carrito_add/", views.carrito_add, name="carrito_add"),
+	path("carrito_ver/", views.carrito_ver, name="carrito_ver"),
+
 
     #CRUD DE CATEGORIAS
 

@@ -44,6 +44,7 @@ def login(request):
 def logout (request):
     try:
         del request.session["logueo"]
+        del request.session["carrito"]
         messages.success(request, "Sesión cerrada correctamente!")
         return redirect("index")
     except Exception as e:
@@ -211,4 +212,77 @@ def categorias_actualizar(request):
         messages.warning (request, f'Error: No se enviaron datos...')
         
     return redirect('categorias_listar')
+
+
+def carrito_add(request):
+	if request.method == "POST":
+		try:
+			carrito = request.session.get("carrito", False)
+			if not carrito:
+				request.session["carrito"] = []
+				carrito = []
+
+			id_producto = int(request.POST.get("id"))
+			cantidad = request.POST.get("cantidad")
+			# Consulto el producto en DB...........................
+			q = Productos.objects.get(pk=id_producto)
+			for p in carrito:
+				if p["id"] == id_producto:
+					if q.inventario >= (p["cantidad"] + int(cantidad)) and int(cantidad) > 0:
+						p["cantidad"] += int(cantidad)
+						p["subtotal"] = p["cantidad"] * q.precio
+					else:
+						print("Cantidad supera inventario...")
+						messages.warning(request, "Cantidad supera inventario...")
+					break
+			else:
+				print("No existe en carrito... lo agregamos")
+				if q.inventario >= int(cantidad) and int(cantidad) > 0:
+					carrito.append(
+						{
+							"id": q.id,
+							"foto": q.foto.url,
+							"producto": q.nombre,
+							"cantidad": int(cantidad),
+							"subtotal": int(cantidad) * q.precio
+						}
+					)
+				else:
+					print("Cantidad supera inventario...")
+					messages.warning(request, "No se puede agregar, no hay suficiente inventario.")
+
+			# Actualizamos variable de sesión carrito...
+			request.session["carrito"] = carrito
+
+			contexto = {
+				"items": len(carrito),
+				"total": sum(p["subtotal"] for p in carrito)
+			}
+			return render(request, "tienda/carrito/carrito.html", contexto)
+		except ValueError as e:
+			messages.error(request, f"Error: Digite un valor correcto para cantidad")
+			return HttpResponse("Error")
+		except Exception as e:
+			messages.error(request, f"Ocurrió un Error: {e}")
+			return HttpResponse("Error")
+	else:
+		messages.warning(request, "No se enviaron datos.")
+		return HttpResponse("Error")
+
+
+
+def carrito_ver(request):
+	carrito = request.session.get("carrito", False)
+	if not carrito:
+		request.session["carrito"] = []
+		contexto = {
+			"items": 0,
+			"total": 0
+		}
+	else:
+		contexto = {
+			"items": len(carrito),
+			"total": sum(p["subtotal"] for p in carrito)
+		}
+	return render(request, "tienda/carrito/carrito.html", contexto)
 

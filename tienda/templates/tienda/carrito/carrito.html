@@ -1,0 +1,31 @@
+<h1>Carrito de compra ({{ items }})</h1>
+
+{% if request.session.carrito %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in request.session.carrito %}
+            <tr>
+                <td>
+                    <img src="{{ p.foto }}" width="20%"/><br>
+                    {{ p.producto }}
+                </td>
+                <td>{{ p.cantidad }}</td>
+                <td>{{ p.subtotal }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2"><strong>TOTAL</strong></td>
+                <td><strong>{{ total }}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay productos en el carrito</p>
+{% endif %}
